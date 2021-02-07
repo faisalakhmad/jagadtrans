@@ -116,6 +116,8 @@
                         <?php  
                         echo level_user('transaksi', 'index', $this->session->userdata('kategori'),'add') > 0 ? '<a class="btn btn-success btn-sm" href="#" data-toggle="modal" data-target="#tambahData"><i class="fa fa-plus"></i> Tambah</a>':'&nbsp;';
                         ?>
+                        <a class="btn btn-warning btn-sm" href="<?php echo base_url('transaksi/print_pdf/'); ?>" target="_blank"><i class="fa fa-file-pdf-o"></i> Cetak PDF</a>
+                        <a class="btn btn-primary btn-sm" href="<?php echo base_url('transaksi/eksport_xls/'); ?>"><i class="fa fa-file-excel-o"></i> Export Xls</a>
 
 						<div class="box-tools pull-right">						 
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -162,7 +164,7 @@
 <div class="modal fade" id="tambahData" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 90%">
         <div class="modal-content">
-            <?php echo form_open('transaksi/pengiriman_tambah',' id="FormulirTambah" class="form-horizontal"');?>  
+            <?php echo form_open('transaksi/pengiriman_tambah',' id="FormulirTambah" class="form-horizontal" enctype="multipart/form-data" ');?>  
             <div class="modal-header">
                 <h4 class="modal-title">Tambah <?php echo ucwords($current_controller); ?></h4>
             </div>
@@ -225,12 +227,6 @@
                             <label class="col-sm-3 control-label">Keterangan</label>
                             <div class="col-sm-9">
                                 <input type="text" name="keterangan" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group foto">
-                            <label class="col-sm-3 control-label">Foto</label>
-                            <div class="col-sm-9">
-                                <input type="file" name="foto" class="form-control" />
                             </div>
                         </div>
                     </div>
@@ -318,12 +314,6 @@
                                 <input type="text" name="keterangan" id="keterangan" class="form-control" />
                             </div>
                         </div>
-                        <div class="form-group foto">
-                            <label class="col-sm-3 control-label">Foto</label>
-                            <div class="col-sm-9">
-                                <input type="file" name="foto" id="foto" class="form-control" />
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -348,63 +338,85 @@
                 <h4 class="modal-title">Detail <?php echo ucwords($current_controller); ?></h4>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Instansi</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="instansi_detil" class="form-control" disabled="disabled" />
-                            </div>
-                        </div>                        
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Penerima</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="penerima_detil" class="form-control" disabled="disabled" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Kecamatan / Desa</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="kec_detil" class="form-control" disabled="disabled" />
-                            </div>
-                        </div> 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Alamat</label>
-                            <div class="col-sm-9">
-                                 <input type="text" id="alamat_detil" class="form-control" disabled="disabled" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Lokasi</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="lokasi_detil" class="form-control" disabled="disabled" />
-                            </div>
-                        </div>
-                        
-                    </div>
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1" data-toggle="tab">Detail Info</a></li>
+                    <li><a href="#tab_2" data-toggle="tab">Foto</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_1">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Instansi</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="instansi_detil" class="form-control" disabled="disabled" />
+                                        </div>
+                                    </div>                        
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Penerima</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="penerima_detil" class="form-control" disabled="disabled" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Penerima Barang</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="penerima_barang_detil" class="form-control" disabled="disabled" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Kecamatan / Desa</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="kec_detil" class="form-control" disabled="disabled" />
+                                        </div>
+                                    </div> 
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Alamat</label>
+                                        <div class="col-sm-9">
+                                             <input type="text" id="alamat_detil" class="form-control" disabled="disabled" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Lokasi</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="lokasi_detil" class="form-control" disabled="disabled" />
+                                        </div>
+                                    </div>
+                                    
+                                </div>
 
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Jenis Dokumen <span class="required">*</span></label>
-                            <div class="col-sm-9">
-                                <input type="text" id="dokumen_detil" class="form-control" disabled="disabled" />
-                            </div>
-                        </div> 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Keterangan</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="keterangan_detil" class="form-control" disabled="disabled"/>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Jenis Dokumen <span class="required">*</span></label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="dokumen_detil" class="form-control" disabled="disabled" />
+                                        </div>
+                                    </div> 
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Keterangan</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="keterangan_detil" class="form-control" disabled="disabled"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Catatan</label>
+                                        <div class="col-sm-9">
+                                            <textarea id="catatan_detil" style="width: 100%" disabled="disabled"></textarea>
+                                        </div>
+                                    </div>                                    
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Foto</label>
-                            <div class="col-sm-9">
-                                <input type="file" class="form-control" />
+                        <div class="tab-pane" id="tab_2">
+                            <div class="row">
+                                <div class="col-sm-9" id="image_detil"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+                
             <footer class="modal-footer">
                 <div class="row">
                     <div class="col-md-12 text-right">
@@ -728,14 +740,16 @@
                     dataType    : 'json',
                     success: function(response) {  
                         $.each(response, function(i, item) { 
-
                             document.getElementById("instansi_detil").value = item.instansi; 
                             document.getElementById("penerima_detil").value = item.penerima;
+                            document.getElementById("penerima_barang_detil").value = item.penerima_barang;
                             document.getElementById("kec_detil").value = item.desa; 
                             document.getElementById("alamat_detil").value = item.alamat; 
                             document.getElementById("keterangan_detil").value = item.keterangan;
+                            document.getElementById("catatan_detil").value = item.catatan;
                             document.getElementById("lokasi_detil").value = item.lokasi;
-                            document.getElementById("dokumen_detil").value = item.dokumen; 
+                            document.getElementById("dokumen_detil").value = item.dokumen;
+                             document.getElementById("image_detil").innerHTML = item.foto; 
                         }); 
                     }
                 });  

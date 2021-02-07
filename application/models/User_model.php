@@ -62,37 +62,37 @@ class User_model extends CI_Model{
             [
             'field' => 'password',
             'label' => 'Password',
-            'rules' => 'required',
+            'rules' => 'required|min_length[5]|differs[username]',
             ],
             [
             'field' => 'password2',
-            'label' => 'Password Konfirmasi',
+            'label' => 'Password konfirmasi',
             'rules' => 'trim|required|matches[password]'
             ] ,
             [
             'field' => 'username',
-            'label' => 'username',
-            'rules' => 'is_unique[master_admin.username]|required',
+            'label' => 'Username',
+            'rules' => 'is_unique[master_admin.username]|required|min_length[3]',
             ] ,
             [
             'field' => 'nama',
             'label' => 'Nama user',
-            'rules' => 'required',
+            'rules' => 'required|min_length[3]',
             ] ,
             [
             'field' => 'alamat',
-            'label' => 'alamat',
-            'rules' => 'required',
+            'label' => 'Alamat',
+            'rules' => 'required|min_length[3]',
             ] ,
             [
             'field' => 'hp',
-            'label' => 'hp',
-            'rules' => 'required',
+            'label' => 'Nomor HP',
+            'rules' => 'required|integer',
             ] ,
             [
             'field' => 'email',
-            'label' => 'email',
-            'rules' => 'required',
+            'label' => 'Email',
+            'rules' => 'required|valid_email',
             ] 
         ];
     }
@@ -120,37 +120,37 @@ class User_model extends CI_Model{
             [
             'field' => 'password',
             'label' => 'Password',
-            'rules' => 'trim'
+            'rules' => 'trim|min_length[5]|differs[username]'
             ] ,
             [
             'field' => 'password2',
-            'label' => 'Password Konfirmasi',
-            'rules' => 'trim|matches[password]'
+            'label' => 'Password konfirmasi',
+            'rules' => 'trim|matches[password]|min_length[5]'
             ] ,
             [
             'field' => 'username',
-            'label' => 'username',
-            'rules' => 'required',
+            'label' => 'Username',
+            'rules' => 'required|required|min_length[3]',
             ] ,
             [
             'field' => 'nama',
             'label' => 'Nama user',
-            'rules' => 'required',
+            'rules' => 'required|min_length[3]',
             ] ,
             [
             'field' => 'alamat',
             'label' => 'alamat',
-            'rules' => 'required',
+            'rules' => 'required|min_length[3]',
             ] ,
             [
             'field' => 'hp',
-            'label' => 'handphone',
-            'rules' => 'required',
+            'label' => 'Nomor HP',
+            'rules' => 'required|integer',
             ] ,
             [
             'field' => 'email',
-            'label' => 'email',
-            'rules' => 'required',
+            'label' => 'Email',
+            'rules' => 'required|valid_email',
             ],
             [
             'field' => 'status',

@@ -21,7 +21,7 @@
 </div>
 <!-- /.login-logo -->
 <div class="login-box-body">
-<p class="login-box-msg">Sign in to start your session</p>
+<p class="login-box-msg">Log in to start your session</p>
 
 <?php echo form_open('login/authlogin',' id="Formulir" ');?> 
 <div class="form-group has-feedback username">

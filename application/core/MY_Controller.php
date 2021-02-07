@@ -19,4 +19,12 @@ class Main_Controller extends CI_Controller {
         return $menu;
     }
 
+    public function data_perusahaan(){
+        $this->load->model('instansi_model');
+        $data = $this->instansi_model->get_data_perusahaan();
+        return $data;
+    }
+
+
+
 }

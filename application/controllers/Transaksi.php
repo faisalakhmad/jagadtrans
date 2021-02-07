@@ -1,6 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+require('./phpspreadsheet/vendor/autoload.php'); 
+use PhpOffice\PhpSpreadsheet\Helper\Sample;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet; 
+
 class Transaksi extends Main_Controller {
     var $arr_status_kirim;
 
@@ -105,6 +110,7 @@ class Transaksi extends Main_Controller {
         #cekajax(); 
         $simpan     = $this->transaksi_model;
         $validation = $this->form_validation; 
+        $post       = $this->input->post();
         $validation->set_rules($simpan->rules_pengiriman());
 
         if ($this->form_validation->run() == FALSE){
@@ -153,8 +159,18 @@ class Transaksi extends Main_Controller {
 
     function pengiriman_delete(){ 
         cekajax(); 
-        $hapus = $this->transaksi_model;
-        if($hapus->hapusdata_pengiriman()){ 
+
+        $hapus  = $this->transaksi_model;
+
+        $post   = $this->input->post(); 
+        $detil  = $hapus->get_detail_trans($post['idd']);
+
+        if($hapus->hapusdata_pengiriman()){
+            if(!empty($detil->row()->trans_foto)){
+                if(file_exists('images/'.$detil->row()->trans_foto)){
+                    unlink('images/'.$detil->row()->trans_foto);
+                }
+            } 
             $data['success']= true;
             $data['message']="Berhasil menghapus data"; 
         }else{    
@@ -168,15 +184,22 @@ class Transaksi extends Main_Controller {
     function pengiriman_detail(){  
         cekajax(); 
         $query = $this->transaksi_model->get_detail_trans($this->input->get("id"));
+
+        if(!empty($query->row()->trans_foto)){
+            $img = "<img class='img-responsive pad' src='../images/".$query->row()->trans_foto."' />";
+        }
+
         $result = array(  
             "dokumen" => $this->security->xss_clean($query->row()->jdok_nama), 
             "instansi" => $this->security->xss_clean($query->row()->instansi_nama), 
             "penerima" => $this->security->xss_clean($query->row()->trans_penerima), 
+            "penerima_barang" => $this->security->xss_clean($query->row()->trans_penerima_barang), 
             "desa" => $this->security->xss_clean($query->row()->kec_desa), 
             "alamat" => $this->security->xss_clean($query->row()->trans_alamat), 
             "keterangan" => $this->security->xss_clean($query->row()->trans_keterangan), 
+            "catatan" => $this->security->xss_clean($query->row()->trans_catatan), 
             "lokasi" => $this->security->xss_clean($query->row()->trans_lokasi), 
-            "foto" => $this->security->xss_clean($query->row()->trans_foto)
+            "foto" => $img
         );    
         echo'['.json_encode($result).']';
     }
@@ -224,6 +247,95 @@ class Transaksi extends Main_Controller {
 
         $data['success']= true;
         echo json_encode($data);
+    }
+
+    function eksport_xls(){
+        $spreadsheet    = new Spreadsheet();
+        $data           = $this->transaksi_model->get_data_for_export(); 
+
+        $spreadsheet->getProperties()->setCreator(APP_NAME)
+        ->setLastModifiedBy(APP_NAME)
+        ->setTitle('Export Excel Transaksi')
+        ->setSubject('Export Excel Transaksi');
+
+        $spreadsheet->setActiveSheetIndex(0)
+        ->setCellValue('A1', 'NO')
+        ->setCellValue('B1', 'TANGGAL')
+        ->setCellValue('C1', 'INSTANSI')
+        ->setCellValue('D1', 'JENIS DOKUMEN')
+        ->setCellValue('E1', 'PENERIMA')
+        ->setCellValue('F1', 'PENERIMA BARANG')
+        ->setCellValue('G1', 'KEC / DESA')
+        ->setCellValue('H1', 'ALAMAT')
+        ->setCellValue('I1', 'LOKASI')
+        ->setCellValue('J1', 'KETERANGAN')
+        ->setCellValue('K1', 'CATATAN')        
+        ;
+
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('B')->setWidth(20);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('C')->setWidth(50);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('D')->setWidth(30);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('E')->setWidth(30);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('F')->setWidth(30);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('G')->setWidth(30);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('H')->setWidth(30);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('I')->setWidth(30);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('J')->setWidth(30);
+        $spreadsheet->setActiveSheetIndex(0)->getColumnDimension('K')->setWidth(30);
+
+
+        $i=2; 
+        foreach($data as $post) { 
+            $tgl    = tgl_indo($post['trans_tanggal']);
+            $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A'.$i, (int)$i - 1)
+            ->setCellValue('B'.$i, $tgl)
+            ->setCellValue('C'.$i, $post['instansi_nama'])
+            ->setCellValue('D'.$i, $post['jdok_nama'])
+            ->setCellValue('E'.$i, $post['trans_penerima'])
+            ->setCellValue('F'.$i, $post['trans_penerima_barang'])
+            ->setCellValue('G'.$i, $post['kec_nama'].' / '.$post['desa_nama'])
+            ->setCellValue('H'.$i, $post['trans_alamat'])
+            ->setCellValue('I'.$i, $post['trans_lokasi'])
+            ->setCellValue('J'.$i, $post['trans_keterangan'])
+            ->setCellValue('K'.$i, $post['trans_catatan']);
+            $i++;
+        }
+
+        // Rename worksheet
+        $spreadsheet->getActiveSheet()->setTitle('Eksport Transaksi Pengiriman');
+
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+        $spreadsheet->setActiveSheetIndex(0);
+
+        // Redirect output to a client’s web browser (Xlsx)
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="Eksport_Transaksi_Pengiriman.xlsx"');
+        header('Cache-Control: max-age=0');
+        // If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+
+        // If you're serving to IE over SSL, then the following may be needed
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header('Pragma: public'); // HTTP/1.0
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save('php://output');
+        exit;  
+ 
+    }
+
+    function print_pdf(){
+        ini_set('memory_limit', '512M');
+        $this->load->library('tcpdf');
+
+        $data['transaksi']      = $this->transaksi_model->get_data_for_export();
+        $data['perusahaan']     = $this->data_perusahaan();
+        $data['logo']           = base_url().'images/system/logo.jpg';
+
+        $this->load->view('member/transaksi/'.__FUNCTION__, $data);
     }
 
 }

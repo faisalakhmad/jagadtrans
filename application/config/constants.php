@@ -86,6 +86,8 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 
 
-defined('APP_NAME')      		OR define('APP_NAME', 'Jagad Trans'); // highest automatically-assigned error code
+defined('APP_NAME')      		OR define('APP_NAME', 'Jagad Dhita'); // highest automatically-assigned error code
 defined('APP_NAME_FRONT')      	OR define('APP_NAME_FRONT', 'JAGAD'); // highest automatically-assigned error code
-defined('APP_NAME_END')      	OR define('APP_NAME_END', 'TRANS'); // highest automatically-assigned error code
+defined('APP_NAME_END')      	OR define('APP_NAME_END', 'DHITA'); // highest automatically-assigned error code
+defined('APP_NAME_FRONT_ALIAS') OR define('APP_NAME_FRONT_ALIAS', 'J'); // highest automatically-assigned error code
+defined('APP_NAME_END_ALIAS')   OR define('APP_NAME_END_ALIAS', 'D'); // highest automatically-assigned error code

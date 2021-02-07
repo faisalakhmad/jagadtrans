@@ -9,8 +9,8 @@
 <script src="<?php echo base_url() ?>assets/new/dist/js/demo.js"></script>
 
 <script src="<?php echo base_url() ?>assets/vendor/select2/select2.js"></script>
-<script src="<?php echo base_url() ?>assets/vendor/jquery-datatables/media/js/jquery.dataTables.js"></script>
-<script src="<?php echo base_url() ?>assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>
+<script src="<?php echo base_url() ?>assets/new/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="<?php echo base_url() ?>assets/new/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <script src="<?php echo base_url() ?>assets/javascripts/theme.init.js"></script> 
 <script src="<?php echo base_url() ?>assets/vendor/pnotify/pnotify.custom.js"></script>
 

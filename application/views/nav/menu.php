@@ -1,6 +1,6 @@
 <header class="main-header">
 	<a href="<?php echo base_url(); ?>" class="logo">
-		<span class="logo-mini"><b>J</b>T</span>
+		<span class="logo-mini"><b><?php echo APP_NAME_FRONT_ALIAS ?></b><?php echo APP_NAME_END_ALIAS ?></span>
 		<span class="logo-lg"><b><?php echo APP_NAME_FRONT ?></b><?php echo APP_NAME_END ?></span>
 	</a>
 

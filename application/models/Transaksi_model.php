@@ -184,4 +184,11 @@ class Transaksi_model extends CI_Model{
         return $this->db->get();
     }
 
+    function get_data_for_export(){ 
+        $get = $this->input->get();
+        $this->_get_query_pengiriman();
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
 }

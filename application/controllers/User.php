@@ -13,7 +13,7 @@ class User extends Main_Controller {
     }
 
     function index(){
-        $this->data['current_controller'] = 'index';
+        $this->data['current_controller'] = 'user';
         $this->data['kategori']           = $this->db->get('kategori_user')->result(); 
         level_user('user','index',$this->session->userdata('kategori'),'read') > 0 ? '': show_404();
         $this->load->view('member/user/home', $this->data);

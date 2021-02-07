@@ -13,7 +13,9 @@
 <link rel="stylesheet" href="<?php echo base_url() ?>assets/new/dist/css/skins/_all-skins.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 <link rel="stylesheet" href="<?php echo base_url() ?>assets/vendor/select2/select2.css" />
-<link rel="stylesheet" href="<?php echo base_url() ?>assets/vendor/jquery-datatables-bs3/assets/css/datatables.css" />
+
+<link rel="stylesheet" href="<?php echo base_url() ?>assets/new/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
 <link rel="stylesheet" href="<?php echo base_url() ?>assets/vendor/pnotify/pnotify.custom.css" />
 <link rel="stylesheet" href="<?php echo base_url() ?>assets/vendor/morris/morris.css" />
 <style type="text/css">
