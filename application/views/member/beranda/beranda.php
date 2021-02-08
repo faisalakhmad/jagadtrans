@@ -21,50 +21,41 @@ Dashboard
 <section class="content">
 <!-- Info boxes -->
 <div class="row">
-<div class="col-md-3 col-sm-6 col-xs-12">
+<div class="col-md-4 col-sm-6 col-xs-12">
 <div class="info-box">
-<span class="info-box-icon bg-aqua"><i class="ion ion-ios-paperplane"></i></span>
+<span class="info-box-icon bg-green"><i class="ion ion-ios-paperplane"></i></span>
 <div class="info-box-content">
-<span class="info-box-text">Total Dokumen<br>Diantar Hari Ini</span>
-<span class="info-box-number"><strong class="amount" id="hariini_total_dok"></strong></span>
+<span class="info-box-text">Jumlah Dokumen <b>Sudah</b><br>Diantar Hari Ini</span>
+<span class="info-box-number"><strong class="amount" id="hariini_total_dok_sukses"></strong></span>
 </div>
 </div>
 </div>
 <!-- fix for small devices only -->
 <div class="clearfix visible-sm-block"></div>
 
-<div class="col-md-3 col-sm-6 col-xs-12">
+<div class="col-md-4 col-sm-6 col-xs-12">
 <div class="info-box">
-<span class="info-box-icon bg-green"><i class="ion ion-android-document"></i></span>
+<span class="info-box-icon bg-aqua"><i class="ion ion-ios-paperplane"></i></span>
 
 <div class="info-box-content">
-<span class="info-box-text">KTP</span>
-<span class="info-box-number"><strong class="amount" id="laba_hari_ini"></strong></span>
+<span class="info-box-text">Jumlah Dokumen <b>Belum</b><br>Diantar Hari Ini</span>
+<span class="info-box-number"><strong class="amount" id="hariini_total_dok_belum"></strong></span>
 </div>
 <!-- /.info-box-content -->
 </div>
 <!-- /.info-box -->
 </div>
 <!-- /.col -->
+<div class="clearfix visible-sm-block"></div>
 
-<div class="col-md-3 col-sm-6 col-xs-12">
+<div class="col-md-4 col-sm-6 col-xs-12">
 <div class="info-box">
-<span class="info-box-icon bg-purple"><i class="ion ion-android-document"></i></span>
+<span class="info-box-icon bg-red"><i class="ion ion-ios-paperplane"></i></span>
 <div class="info-box-content">
-<span class="info-box-text">KK</span>
-<span class="info-box-number"><strong class="amount" id="penjualan_bulan_ini"></strong></span>
+<span class="info-box-text">Jumlah Dokumen <b>Gagal</b><br>Diantar Hari Ini</span>
+<span class="info-box-number"><strong class="amount" id="hariini_total_dok_gagal"></strong></span>
 
 <!-- <span class="info-box-number"><strong class="amount" id="total_hutang_belum_bayar"></strong></span> -->
-</div>
-</div>
-</div>
-
-<div class="col-md-3 col-sm-6 col-xs-12">
-<div class="info-box">
-<span class="info-box-icon bg-yellow"><i class="ion ion-android-document"></i></span>
-<div class="info-box-content">
-<span class="info-box-text">AKTA</span>
-<span class="info-box-number"><strong class="amount" id="laba_bulan_ini"></strong></span>
 </div>
 </div>
 </div>
@@ -96,7 +87,7 @@ Dashboard
     <div class="box-body">
     <div class="row">
         <div class="col-md-12">
-            <div class="" id="graph_1_bulan"></div> 
+            <div class="" id="graph_per_kecamatan"></div> 
         </div>
     </div>
     <!-- /.row -->
@@ -128,81 +119,60 @@ $.ajax({
     type: 'GET', 
     success: function(response) {
     $.each(response, function(i, item) {  
-    $('#hariini_total_dok').html(item.hariini_total_dok);  
+    $('#hariini_total_dok_sukses').html(item.hariini_total_dok); 
+    $('#hariini_total_dok_belum').html(item.hariini_total_dok_belum); 
+    $('#hariini_total_dok_gagal').html(item.hariini_total_dok_gagal);  
     }); 
     }
 });
 
-Highcharts.chart('graph_1_bulan', {
+$.ajax({
+    url: '<?php echo base_url()?>dashboard/graph_per_kecamatan', // getchart.php
+    dataType: 'JSON',
+    type: 'GET', 
+    success: function(response) {
+        Highcharts.chart('graph_per_kecamatan', {
         chart: {
-        type: 'column'
+            type: 'column'
         },
         title: {
-        text: 'Grafik Per Kecamatan'
+            text: 'Grafik Pengiriman Dokumen <b>Sudah</b> Diantar Per Kecamatan'
         },
         subtitle: {
-        text: 'Per Tahun <?php echo date('Y'); ?>'
-        },
-        xAxis: {
-        categories: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec'
-        ],
-        crosshair: true
+        text: 'Per Hari Aktif'
         },
         yAxis: {
-        min: 0,
-        title: {
-        text: 'Jumlah Dokumen Dikirim'
-        }
+            min: 0,
+            title: {
+                text: 'Jumlah Dokumen Dikirim'
+            }
         },
 
         xAxis: {
-        title: {
-        text: 'Kecamatan'
-        }
+            categories: [
+            '<?php echo date('d/m/Y'); ?>',
+            ],
+            crosshair: true
         },
         tooltip: {
-        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-        '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-        footerFormat: '</table>',
-        shared: true,
-        useHTML: true
+            headerFormat: '<span style="font-size:10px"><b>KECAMATAN</b></span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}</td>' +
+            '<td style="padding:0">: <b>{point.y} Dokumen</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
         },
         plotOptions: {
-        column: {
-        pointPadding: 0.2,
-        borderWidth: 0
-        }
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
         },
-        series: [{
-        name: 'Tokyo',
-        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-
-        }, {
-        name: 'New York',
-        data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
-
-        }, {
-        name: 'London',
-        data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
-
-        }, {
-        name: 'Berlin',
-        data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
-
-        }]
+        series: response.grap
         });
+    }
+}); 
+
+
 
 </script>

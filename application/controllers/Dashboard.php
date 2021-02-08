@@ -23,6 +23,8 @@ class Dashboard extends Main_Controller {
     public function laporan_ringkas(){ 
         cekajax();    
         $hariini_total_dok = $this->dashboard_model->hariini_total_dok();
+        $hariini_total_dok_belum = $this->dashboard_model->hariini_total_dok_belum();
+        $hariini_total_dok_gagal = $this->dashboard_model->hariini_total_dok_gagal();
         /*$total_laba_hari_ini = $this->dashboard_model->total_laba_hari_ini();
 
         $total_penjualan_minggu_ini = $this->dashboard_model->total_penjualan_minggu_ini(); 
@@ -40,7 +42,9 @@ class Dashboard extends Main_Controller {
         $total_retur = $this->db->count_all('retur_pembelian');  */
          
         $result = array(   
-            "hariini_total_dok" => $this->security->xss_clean($hariini_total_dok->total)
+            "hariini_total_dok" => $this->security->xss_clean($hariini_total_dok->total),
+            "hariini_total_dok_belum" => $this->security->xss_clean($hariini_total_dok_belum->total),
+            "hariini_total_dok_gagal" => $this->security->xss_clean($hariini_total_dok_gagal->total)
 
             /*"sudah_jatuh_tempo" => $this->security->xss_clean($sudah_jatuh_tempo." Transaksi"),
             "total_hutang_belum_bayar" => $this->security->xss_clean(rupiah($total_hutang_belum_bayar->total)),
@@ -63,22 +67,6 @@ class Dashboard extends Main_Controller {
         foreach( $period as $day) {
             $tgl = $day->format( 'Y-m-d');  
             $data['jumlah'] = $this->dashboard_model->penjualan($tgl); 
-            $data['tanggal'] = $tgl;
-            $data_array[] = $data;
-        } 
-        echo json_encode($data_array);
-    }
-    public function cash_2_minggu(){ 
-        cekajax();
-        $now = new DateTime('12 days ago');
-        $interval = new DateInterval( 'P1D');
-        $period = new DatePeriod( $now, $interval, 13); 
-        foreach( $period as $day) {
-            $tgl = $day->format( 'Y-m-d');   
-            $masuk = $this->dashboard_model->cash_masuk($tgl); 
-            $data['masuk'] = $masuk->total == null ? 0 : $masuk->total;
-            $laba = $this->dashboard_model->laba_masuk($tgl); 
-            $data['laba'] = $laba->total == null ? 0 : $laba->total;
             $data['tanggal'] = $tgl;
             $data_array[] = $data;
         } 
@@ -122,36 +110,15 @@ class Dashboard extends Main_Controller {
         echo json_encode($data_array);
     }
 
-    function lastOfMonth($year, $month) {
-        return date("d", strtotime('-1 second', strtotime('+1 month',strtotime($month . '/01/' . $year. ' 00:00:00'))));
-    }   
-    
+    public function graph_per_kecamatan(){
+        $data = $this->dashboard_model->graph_per_kecamatan();
 
-    public function produk_kadaluarsa(){     
-        cekajax();    
-        $subitem= $this->dashboard_model->get_produk_kadaluarsa(); 
-        $arraysub =[];
-        foreach($subitem as $r) {   
-			$subArray['kode_item']=$r->kode_item;
-			$subArray['nama_item']=$r->nama_item;  
-			$subArray['tgl_expired']= tgl_indo($r->tgl_expired);       
-            $arraysub[] =  $subArray ; 
-        }   
-        echo'{"datasub":'.json_encode($arraysub).'}';
-    }
-
-    public function produk_terlaris(){     
-        cekajax();    
-        $subitem= $this->dashboard_model->get_produk_terlaris(); 
-        $arraysub =[];
-        foreach($subitem as $r) {   
-			$subArray['kode_item']=$r->kode_item;
-			$subArray['nama_item']=$r->nama_item;   
-			$subArray['total']=$r->total ." ". $r->satuan;  
-            $subArray['qty']=$r->stok;    
-            $arraysub[] =  $subArray ; 
-        }   
-        echo'{"datasub":'.json_encode($arraysub).'}';
+        $arr_return = array();
+        for ($i=0; $i < sizeof($data); $i++) { 
+            $arr_return['grap'][$i]['name'] = $data[$i]['kecamatan'];
+            $arr_return['grap'][$i]['data'] = array((int)$data[$i]['jumlah_kirim']);
+        }
+        echo json_encode($arr_return);
     }
 
 }
