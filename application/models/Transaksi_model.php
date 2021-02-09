@@ -23,6 +23,7 @@ class Transaksi_model extends CI_Model{
         $this->db->join('master_jenis_dokumen', 'jdok_id = trans_jdok_id');
         $this->db->join('master_desa', 'trans_desa_id = desa_id');
         $this->db->join('master_kecamatan', 'desa_kec_id = kec_id');
+        $this->db->join('master_admin', 'trans_user = master_admin.id');
 
         $sess_instansi      = $this->session->userdata('filter_instansi');
         $filter_jdok        = $this->session->userdata('filter_jdok');
@@ -68,6 +69,16 @@ class Transaksi_model extends CI_Model{
             $this->db->where(" (trans_tanggal BETWEEN '$filter_tgl_awal' AND '$filter_tgl_akhir' ) ");
         }
 
+        // per instansi
+        if(!empty($this->session->userdata('id_instansi'))){
+            $this->db->where(" trans_instansi_id = '".$this->session->userdata('id_instansi')."' ");
+        }
+
+        //driver
+        if(!empty($this->session->userdata('kategori')) && $this->session->userdata('kategori') == ID_KATEGORI_USER_DRIVER){
+            $this->db->where(" trans_user = '".$this->session->userdata('idadmin')."' ");
+        }
+
         if(isset($get['order'])) 
         {
             $this->db->order_by($this->column_order_pengiriman[$get['order']['0']['column']], $get['order']['0']['dir']);
@@ -89,6 +100,11 @@ class Transaksi_model extends CI_Model{
     function count_all_datatable_pengiriman()
     {
         $this->db->from('trans_pengiriman');
+        // per instansi
+        if(!empty($this->session->userdata('id_instansi'))){
+            $this->db->where(" trans_instansi_id = '".$this->session->userdata('id_instansi')."' ");
+        }
+        
         return $this->db->count_all_results();
     }
 
@@ -115,7 +131,8 @@ class Transaksi_model extends CI_Model{
             'trans_lokasi'=>$post["lokasi"],
             'trans_foto'=>$nama_file,
             'trans_tanggal'=> date("Y-m-d"),
-            'trans_user'=> $this->session->userdata('idadmin')
+            'trans_user'=>$post["driver"],
+            'trans_user_pengubah'=>$this->session->userdata('idadmin')
         );
         return $this->db->insert("trans_pengiriman", $array);   
     } 
@@ -130,6 +147,7 @@ class Transaksi_model extends CI_Model{
         $this->trans_alamat 		= $post["alamat"]; 
         $this->trans_keterangan 	= $post["keterangan"]; 
         $this->trans_lokasi 		= $post["lokasi"]; 
+        $this->trans_user           = $post["driver"]; 
         $this->trans_update 		= date('Y-m-d H:i:s'); 
 
         return $this->db->update("trans_pengiriman", $this, array('trans_id' => $post['idd']));
@@ -169,16 +187,27 @@ class Transaksi_model extends CI_Model{
         return $query->result();
     }
 
+    function get_data_driver(){
+        $this->db->select('*');
+        $this->db->from('master_admin'); 
+        $this->db->where('kategori', ID_KATEGORI_USER_DRIVER);
+        $this->db->order_by('nama_admin','asc');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     function get_detail_trans($id){
     	$this->db->select('trans_pengiriman.*');
     	$this->db->select("instansi_nama");
     	$this->db->select("jdok_nama");
+        $this->db->select("nama_admin");
     	$this->db->select("CONCAT(kec_nama,' / ', desa_nama) AS kec_desa");
         $this->db->from('trans_pengiriman'); 
         $this->db->join('master_instansi', 'trans_instansi_id = instansi_id');
         $this->db->join('master_jenis_dokumen', 'jdok_id = trans_jdok_id');
         $this->db->join('master_desa', 'trans_desa_id = desa_id');
         $this->db->join('master_kecamatan', 'desa_kec_id = kec_id');
+        $this->db->join('master_admin', 'trans_user = master_admin.id');
         $this->db->where('trans_id', $id);
 
         return $this->db->get();

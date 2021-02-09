@@ -132,6 +132,7 @@
                                             <th width="15%">Aksi</th>
                                             <th>Instansi</th>
                                             <th>Jenis Dokumen</th>
+                                            <th>Driver</th>
                                             <th>Penerima</th>
                                             <th>Kec / Desa</th>
                                             <th>Tgl Kirim</th>
@@ -223,6 +224,16 @@
                                 </select> 
                             </div>
                         </div> 
+                        <div class="form-group driver">
+                            <label class="col-sm-3 control-label">Driver <span class="required">*</span></label>
+                            <div class="col-sm-9">
+                                <select class="select2" name="driver">  
+                                    <?php foreach ($driver as $drv): ?>
+                                    <option value="<?php echo $drv->id;?>"><?php echo $drv->nama_admin;?></option>
+                                    <?php endforeach; ?>
+                                </select> 
+                            </div>
+                        </div>
                         <div class="form-group keterangan">
                             <label class="col-sm-3 control-label">Keterangan</label>
                             <div class="col-sm-9">
@@ -308,6 +319,16 @@
                                 </select> 
                             </div>
                         </div> 
+                        <div class="form-group driver">
+                            <label class="col-sm-3 control-label">Driver <span class="required">*</span></label>
+                            <div class="col-sm-9">
+                                <select class="select2" name="driver" id="driver_detil">  
+                                    <?php foreach ($driver as $drv): ?>
+                                    <option value="<?php echo $drv->id;?>"><?php echo $drv->nama_admin;?></option>
+                                    <?php endforeach; ?>
+                                </select> 
+                            </div>
+                        </div>
                         <div class="form-group keterangan">
                             <label class="col-sm-3 control-label">Keterangan</label>
                             <div class="col-sm-9">
@@ -388,9 +409,15 @@
 
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">Jenis Dokumen <span class="required">*</span></label>
+                                        <label class="col-sm-3 control-label">Jenis Dokumen</label>
                                         <div class="col-sm-9">
                                             <input type="text" id="dokumen_detil" class="form-control" disabled="disabled" />
+                                        </div>
+                                    </div> 
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Driver</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="driver_view" class="form-control" disabled="disabled" />
                                         </div>
                                     </div> 
                                     <div class="form-group">
@@ -597,6 +624,7 @@
                             $("#instansi").select2("val", item.instansi);
                             $("#desa").select2("val", item.desa);
                             $("#jenis_dok").select2("val", item.dok_id);
+                            $("#driver_detil").select2("val", item.driver);
                         }); 
                     }
                 });  
@@ -749,7 +777,8 @@
                             document.getElementById("catatan_detil").value = item.catatan;
                             document.getElementById("lokasi_detil").value = item.lokasi;
                             document.getElementById("dokumen_detil").value = item.dokumen;
-                             document.getElementById("image_detil").innerHTML = item.foto; 
+                            document.getElementById("driver_view").value = item.driver;
+                            document.getElementById("image_detil").innerHTML = item.foto; 
                         }); 
                     }
                 });  

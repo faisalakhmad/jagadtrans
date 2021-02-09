@@ -21,13 +21,20 @@
 <script src="<?php echo base_url() ?>assets/new/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
 
 <script type="text/javascript">
-	$('.select2').select2({
-		
-	});
+$('.select2').select2({
+});
 
-	$('#date_range').daterangepicker({
-		
-	});
+$('#date_range').daterangepicker({
+locale: { 
+format: 'DD/MM/YYYY',
+cancelLabel: 'Clear'
+}
+});
+
+$('#date_range').on('cancel.daterangepicker', function(ev, picker) {
+//do something, like clearing an input
+$('#date_range').val('');
+});
 </script>
 
 </body>

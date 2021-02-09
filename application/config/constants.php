@@ -91,3 +91,6 @@ defined('APP_NAME_FRONT')      	OR define('APP_NAME_FRONT', 'JAGAD'); // highest
 defined('APP_NAME_END')      	OR define('APP_NAME_END', 'DHITA'); // highest automatically-assigned error code
 defined('APP_NAME_FRONT_ALIAS') OR define('APP_NAME_FRONT_ALIAS', 'J'); // highest automatically-assigned error code
 defined('APP_NAME_END_ALIAS')   OR define('APP_NAME_END_ALIAS', 'D'); // highest automatically-assigned error code
+
+defined('ID_KATEGORI_USER_DRIVER')   	OR define('ID_KATEGORI_USER_DRIVER', '36'); 
+defined('ID_KATEGORI_USER_INSTANSI')   	OR define('ID_KATEGORI_USER_INSTANSI', '37'); 

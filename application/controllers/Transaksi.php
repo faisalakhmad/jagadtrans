@@ -31,6 +31,7 @@ class Transaksi extends Main_Controller {
     	$this->data['instansi']          	= $this->transaksi_model->get_data_instansi(); 
     	$this->data['jenis_dok']          	= $this->transaksi_model->get_data_dok();
     	$this->data['desa']          		= $this->transaksi_model->get_data_desa();
+        $this->data['driver']               = $this->transaksi_model->get_data_driver();
         $this->data['status_kirim']         = $this->arr_status_kirim;
 
         $this->data['filter_instansi']      = $this->session->userdata('filter_instansi');
@@ -43,10 +44,10 @@ class Transaksi extends Main_Controller {
         $filter_tgl_akhir                   = $this->session->userdata('filter_tgl_akhir');
         if(!empty($filter_tgl_awal)){
             $filter_tgl_awal = explode('-', $filter_tgl_awal);
-            $filter_tgl_awal = $filter_tgl_awal[1].'/'.$filter_tgl_awal[2].'/'.$filter_tgl_awal[0];
+            $filter_tgl_awal = $filter_tgl_awal[2].'/'.$filter_tgl_awal[1].'/'.$filter_tgl_awal[0];
 
             $filter_tgl_akhir = explode('-', $filter_tgl_akhir);
-            $filter_tgl_akhir = $filter_tgl_akhir[1].'/'.$filter_tgl_akhir[2].'/'.$filter_tgl_akhir[0];
+            $filter_tgl_akhir = $filter_tgl_akhir[2].'/'.$filter_tgl_akhir[1].'/'.$filter_tgl_akhir[0];
 
             $this->data['tgl_kirim']          = $filter_tgl_awal.' - '.$filter_tgl_akhir;
         }
@@ -75,19 +76,20 @@ class Transaksi extends Main_Controller {
             $row[]  = $tombolview.' '.$tomboledit.' '.$tombolhapus;
             $row[]  = $this->security->xss_clean($r->instansi_nama); 
             $row[]  = $this->security->xss_clean($r->jdok_nama); 
+            $row[]  = $this->security->xss_clean($r->nama_admin); 
             $row[]  = $this->security->xss_clean($r->trans_penerima); 
             $row[]  = $this->security->xss_clean($r->kec_nama) . ' / '.$this->security->xss_clean($r->desa_nama);
             $row[]  = $this->security->xss_clean(tgl_indo_short($r->trans_tanggal));
 
             switch ($r->trans_status) {
                 case '0':
-                    $status = 'Belum Dikirim';
+                    $status = "<span class='btn-xs btn-warning'><i class='fa fa-check'></i> Belum Dikirim</span>";
                     break;
                 case '1':
-                    $status = 'Sudah Dikirim';
+                    $status = "<span class='btn-xs btn-success'><i class='fa fa-check'></i> Sudah Dikirim</span>";
                     break;
-                case '0':
-                    $status = 'Gagal Dikirim';
+                case '2':
+                    $status = "<span class='btn-xs btn-danger'><i class='fa fa-times'></i> Gagal Dikirim</span>";
                     break;
                 
                 default:
@@ -199,6 +201,7 @@ class Transaksi extends Main_Controller {
             "keterangan" => $this->security->xss_clean($query->row()->trans_keterangan), 
             "catatan" => $this->security->xss_clean($query->row()->trans_catatan), 
             "lokasi" => $this->security->xss_clean($query->row()->trans_lokasi), 
+            "driver" => $this->security->xss_clean($query->row()->nama_admin), 
             "foto" => $img
         );    
         echo'['.json_encode($result).']';
@@ -214,7 +217,8 @@ class Transaksi extends Main_Controller {
             "keterangan" => $this->security->xss_clean($query->row()->trans_keterangan), 
             "instansi" => $this->security->xss_clean($query->row()->trans_instansi_id), 
             "desa" => $this->security->xss_clean($query->row()->trans_desa_id), 
-            "dok_id" => $this->security->xss_clean($query->row()->trans_jdok_id)
+            "dok_id" => $this->security->xss_clean($query->row()->trans_jdok_id),
+            "driver" => $this->security->xss_clean($query->row()->trans_user)
         );    
         echo'['.json_encode($result).']';
     }
@@ -231,11 +235,11 @@ class Transaksi extends Main_Controller {
             $tgl = explode(' - ', $post['tgl_kirim']);
             $tgl_awal   = $tgl[0];
             $tgl_awal   = explode('/', $tgl_awal);
-            $tgl_awal   = $tgl_awal[2].'-'.$tgl_awal[0].'-'.$tgl_awal[1];
+            $tgl_awal   = $tgl_awal[2].'-'.$tgl_awal[1].'-'.$tgl_awal[0];
 
             $tgl_akhir  = $tgl[1];
             $tgl_akhir  = explode('/', $tgl_akhir);
-            $tgl_akhir  = $tgl_akhir[2].'-'.$tgl_akhir[0].'-'.$tgl_akhir[1];
+            $tgl_akhir  = $tgl_akhir[2].'-'.$tgl_akhir[1].'-'.$tgl_akhir[0];
         }else{
             $tgl_awal   = '';
             $tgl_akhir  = '';
@@ -336,6 +340,151 @@ class Transaksi extends Main_Controller {
         $data['logo']           = base_url().'images/system/logo.jpg';
 
         $this->load->view('member/transaksi/'.__FUNCTION__, $data);
+    }
+
+    // INSTANSI
+    function pengiriman_instansi(){
+        $this->data['current_controller']   = 'Pengiriman';
+        $this->data['jenis_dok']            = $this->transaksi_model->get_data_dok();
+        $this->data['desa']                 = $this->transaksi_model->get_data_desa();
+        $this->data['status_kirim']         = $this->arr_status_kirim;
+
+        $this->data['filter_instansi']      = $this->session->userdata('filter_instansi');
+        $this->data['filter_jdok']          = $this->session->userdata('filter_jdok');
+        $this->data['filter_status']        = $this->session->userdata('filter_status');
+        $this->data['filter_tgl_awal']      = $this->session->userdata('filter_tgl_awal');
+        $this->data['filter_desa']          = $this->session->userdata('filter_desa');
+
+        $filter_tgl_awal                    = $this->session->userdata('filter_tgl_awal');
+        $filter_tgl_akhir                   = $this->session->userdata('filter_tgl_akhir');
+        if(!empty($filter_tgl_awal)){
+            $filter_tgl_awal = explode('-', $filter_tgl_awal);
+            $filter_tgl_awal = $filter_tgl_awal[2].'/'.$filter_tgl_awal[1].'/'.$filter_tgl_awal[0];
+
+            $filter_tgl_akhir = explode('-', $filter_tgl_akhir);
+            $filter_tgl_akhir = $filter_tgl_akhir[2].'/'.$filter_tgl_akhir[1].'/'.$filter_tgl_akhir[0];
+
+            $this->data['tgl_kirim']          = $filter_tgl_awal.' - '.$filter_tgl_akhir;
+        }
+
+        level_user('transaksi',__FUNCTION__, $this->session->userdata('kategori'),'read') > 0 ? '': show_404();
+        $this->load->view('member/transaksi/home_'.__FUNCTION__, $this->data);
+    }
+
+    function data_pengiriman_per_instansi(){
+        cekajax(); 
+        $get    = $this->input->get();
+        $list   = $this->transaksi_model->get_pengiriman_datatable();
+        $data   = array(); 
+        foreach ($list as $r) { 
+            $row = array(); 
+            $tombolview = level_user('transaksi','pengiriman_instansi',$this->session->userdata('kategori'),'read') > 0 ? '<a href="#" onclick="view(this)" data-id="'.$this->security->xss_clean($r->trans_id).'" class="btn btn-sm btn-warning" title="Lihat Detail"><i class="fa fa-search"></i></a>':'';
+
+            $row[]  = $tombolview;
+            $row[]  = $this->security->xss_clean($r->instansi_nama); 
+            $row[]  = $this->security->xss_clean($r->jdok_nama); 
+            $row[]  = $this->security->xss_clean($r->trans_penerima); 
+            $row[]  = $this->security->xss_clean($r->kec_nama) . ' / '.$this->security->xss_clean($r->desa_nama);
+            $row[]  = $this->security->xss_clean(tgl_indo_short($r->trans_tanggal));
+
+            switch ($r->trans_status) {
+                case '0':
+                    $status = "<span class='btn-xs btn-warning'><i class='fa fa-check'></i> Belum Dikirim</span>";
+                    break;
+                case '1':
+                    $status = "<span class='btn-xs btn-success'><i class='fa fa-check'></i> Sudah Dikirim</span>";
+                    break;
+                case '2':
+                    $status = "<span class='btn-xs btn-danger'><i class='fa fa-times'></i> Gagal Dikirim</span>";
+                    break;
+                
+                default:
+                    $status = '-';
+                    break;
+            }
+            $row[]  = $this->security->xss_clean($status); 
+            $data[] = $row;
+        } 
+        $result = array(
+            "draw" => $get['draw'],
+            "recordsTotal" => $this->transaksi_model->count_all_datatable_pengiriman(),
+            "recordsFiltered" => $this->transaksi_model->count_filtered_datatable_pengiriman(),
+            "data" => $data,
+        ); 
+        echo json_encode($result); 
+    }
+
+    // INSTANSI
+    function pengiriman_driver(){
+        $this->data['current_controller']   = 'Pengiriman';
+        $this->data['instansi']             = $this->transaksi_model->get_data_instansi(); 
+        $this->data['jenis_dok']            = $this->transaksi_model->get_data_dok();
+        $this->data['desa']                 = $this->transaksi_model->get_data_desa();
+        $this->data['status_kirim']         = $this->arr_status_kirim;
+
+        $this->data['filter_instansi']      = $this->session->userdata('filter_instansi');
+        $this->data['filter_jdok']          = $this->session->userdata('filter_jdok');
+        $this->data['filter_status']        = $this->session->userdata('filter_status');
+        $this->data['filter_tgl_awal']      = $this->session->userdata('filter_tgl_awal');
+        $this->data['filter_desa']          = $this->session->userdata('filter_desa');
+
+        $filter_tgl_awal                    = $this->session->userdata('filter_tgl_awal');
+        $filter_tgl_akhir                   = $this->session->userdata('filter_tgl_akhir');
+        if(!empty($filter_tgl_awal)){
+            $filter_tgl_awal = explode('-', $filter_tgl_awal);
+            $filter_tgl_awal = $filter_tgl_awal[2].'/'.$filter_tgl_awal[1].'/'.$filter_tgl_awal[0];
+
+            $filter_tgl_akhir = explode('-', $filter_tgl_akhir);
+            $filter_tgl_akhir = $filter_tgl_akhir[2].'/'.$filter_tgl_akhir[1].'/'.$filter_tgl_akhir[0];
+
+            $this->data['tgl_kirim']          = $filter_tgl_awal.' - '.$filter_tgl_akhir;
+        }
+
+        level_user('transaksi',__FUNCTION__, $this->session->userdata('kategori'),'read') > 0 ? '': show_404();
+        $this->load->view('member/transaksi/home_'.__FUNCTION__, $this->data);
+    }
+
+    function data_pengiriman_per_driver(){
+        cekajax(); 
+        $get    = $this->input->get();
+        $list   = $this->transaksi_model->get_pengiriman_datatable();
+        $data   = array(); 
+        foreach ($list as $r) { 
+            $row = array(); 
+            $tombolview = level_user('transaksi','pengiriman_driver',$this->session->userdata('kategori'),'read') > 0 ? '<a href="#" onclick="view(this)" data-id="'.$this->security->xss_clean($r->trans_id).'" class="btn btn-sm btn-warning" title="Lihat Detail"><i class="fa fa-search"></i></a>':'';
+
+            $row[]  = $tombolview;
+            $row[]  = $this->security->xss_clean($r->instansi_nama); 
+            $row[]  = $this->security->xss_clean($r->jdok_nama); 
+            $row[]  = $this->security->xss_clean($r->trans_penerima); 
+            $row[]  = $this->security->xss_clean($r->kec_nama) . ' / '.$this->security->xss_clean($r->desa_nama);
+            $row[]  = $this->security->xss_clean(tgl_indo_short($r->trans_tanggal));
+
+            switch ($r->trans_status) {
+                case '0':
+                    $status = "<span class='btn-xs btn-warning'><i class='fa fa-check'></i> Belum Dikirim</span>";
+                    break;
+                case '1':
+                    $status = "<span class='btn-xs btn-success'><i class='fa fa-check'></i> Sudah Dikirim</span>";
+                    break;
+                case '2':
+                    $status = "<span class='btn-xs btn-danger'><i class='fa fa-times'></i> Gagal Dikirim</span>";
+                    break;
+                
+                default:
+                    $status = '-';
+                    break;
+            }
+            $row[]  = $this->security->xss_clean($status); 
+            $data[] = $row;
+        } 
+        $result = array(
+            "draw" => $get['draw'],
+            "recordsTotal" => $this->transaksi_model->count_all_datatable_pengiriman(),
+            "recordsFiltered" => $this->transaksi_model->count_filtered_datatable_pengiriman(),
+            "data" => $data,
+        ); 
+        echo json_encode($result); 
     }
 
 }

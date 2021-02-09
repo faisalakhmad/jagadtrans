@@ -27,4 +27,27 @@ class dashboard_model extends CI_Model{
           GROUP BY kec_id
           ')->get()->result_array(); 
     }
+
+    // per instansi
+    public function hariini_total_dok_per_instansi(){
+        return $this->db->select('count(trans_id) as total')->from('trans_pengiriman')->where('DATE_FORMAT(trans_tanggal, "%Y-%m-%d") = CURDATE()
+          AND trans_status = "1"
+          AND trans_instansi_id = "'.$this->session->userdata('id_instansi').'"
+          ')->get()->row(); 
+    }
+
+    public function hariini_total_dok_belum_per_instansi(){
+        return $this->db->select('count(trans_id) as total')->from('trans_pengiriman')->where('DATE_FORMAT(trans_tanggal, "%Y-%m-%d") = CURDATE()
+          AND trans_status = "0"
+          AND trans_instansi_id = "'.$this->session->userdata('id_instansi').'"
+          ')->get()->row(); 
+    }
+
+    public function hariini_total_dok_gagal_per_instansi(){
+        return $this->db->select('count(trans_id) as total')->from('trans_pengiriman')->where('DATE_FORMAT(trans_tanggal, "%Y-%m-%d") = CURDATE()
+          AND trans_status = "3"
+          AND trans_instansi_id = "'.$this->session->userdata('id_instansi').'"
+          ')->get()->row(); 
+    }
+
 }

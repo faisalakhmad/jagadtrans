@@ -37,6 +37,7 @@ class Login extends CI_Controller {
                 $this->session->set_userdata('nama_admin',$r['nama_admin']);
                 $this->session->set_userdata('idadmin',$r['id']);
                 $this->session->set_userdata('kategori',$r['kategori']); 
+                $this->session->set_userdata('id_instansi',$r['id_instansi']); 
                 
                 $kategori = $this->db->select("a.kategori_user, b.controller, b.nama_function")
                 ->from("kategori_user a")

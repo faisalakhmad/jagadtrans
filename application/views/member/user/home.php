@@ -78,13 +78,24 @@
                 <div class="form-group keterangan">
                     <label class="col-sm-3 control-label">Kategori</label>
                     <div class="col-sm-9">
-                        <select class="select2" name="kategori">  
+                        <select class="select2" name="kategori" onchange="showoff_instansi(this,'div-instansi-add')">  
                             <?php foreach ($kategori as $kat): ?>
                             <option value="<?php echo $kat->id;?>"><?php echo $kat->kategori_user;?></option>
                             <?php endforeach; ?>
                         </select> 
                     </div>
                 </div> 
+
+                <div class="form-group instansi" style="display: none;" id="div-instansi-add">
+                    <label class="col-sm-3 control-label">Instansi <span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <select class="select2" name="instansi" id="instansi"> 
+                            <?php foreach ($instansi as $inst): ?>
+                            <option value="<?php echo $inst->instansi_id;?>"><?php echo $inst->instansi_nama;?></option>
+                            <?php endforeach; ?>
+                        </select> 
+                    </div>
+                </div>
 
                 <div class="form-group nama">
                     <label class="col-sm-3 control-label">Nama <?php echo ucwords($current_controller); ?> <span class="required">*</span></label>
@@ -161,13 +172,24 @@
                 <div class="form-group keterangan">
                     <label class="col-sm-3 control-label">Kategori</label>
                     <div class="col-sm-9">
-                        <select class="select2" name="kategori" id="kategori">  
+                        <select class="select2" name="kategori" id="kategori" onchange="showoff_instansi(this,'div-instansi-edit')">  
                             <?php foreach ($kategori as $kat): ?>
                             <option value="<?php echo $kat->id;?>"><?php echo $kat->kategori_user;?></option>
                             <?php endforeach; ?>
                         </select> 
                     </div>
                 </div> 
+
+                <div class="form-group instansi" id="div-instansi-edit">
+                    <label class="col-sm-3 control-label">Instansi <span class="required">*</span></label>
+                    <div class="col-sm-9">
+                        <select class="select2" name="instansi" id="instansi_edit"> 
+                            <?php foreach ($instansi as $inst): ?>
+                            <option value="<?php echo $inst->instansi_id;?>"><?php echo $inst->instansi_nama;?></option>
+                            <?php endforeach; ?>
+                        </select> 
+                    </div>
+                </div>
 
                 <div class="form-group nama">
                     <label class="col-sm-3 control-label">Nama <?php echo ucwords($current_controller); ?> <span class="required">*</span></label>
@@ -377,6 +399,7 @@
                             $('.'+key).addClass('has-error');
                             $('input[name="' + key + '"]').after(msg);  
                             $('textarea[name="' + key + '"]').after(msg);  
+                            $('select[name="' + key + '"]').after(msg);
                         }
                         if (key == 'fail') {   
                             new PNotify({
@@ -422,7 +445,7 @@
                     dataType    : 'json',
                     success: function(response) {  
                         $.each(response, function(i, item) { 
-                        document.getElementById("kategori").value = item.kategori_value; 
+                        $("#kategori").select2("val", item.kategori_value);
                         document.getElementById("nama").value = item.nama_admin; 
                         document.getElementById("username").value = item.username; 
                         document.getElementById("alamat").value = item.alamat; 
@@ -433,6 +456,14 @@
                         }else{ 
                             document.getElementById("editblock").checked = true;
                         } 
+
+                        if(item.kategori_value == '<?php echo ID_KATEGORI_USER_INSTANSI ?>'){                            
+                            $('#div-instansi-edit').fadeIn();
+                            $("#instansi_edit").select2("val", item.instansi);
+                        }else{
+                            $("#instansi_edit").select2("val", '');
+                            $('#div-instansi-edit').fadeOut();
+                        }
                         }); 
                     }
                 });  
@@ -465,6 +496,7 @@
                             var msg = '<div class="help-block" for="'+key+'">'+data.errors[key]+'</span>';
                             $('.'+key).addClass('has-error');
                             $('input[name="' + key + '"]').after(msg);  
+                            $('select[name="' + key + '"]').after(msg);  
                         }
                         if (key == 'fail') {   
                             new PNotify({
@@ -584,6 +616,15 @@
                 });  
                 return false;
             }
+
+            function showoff_instansi(val, div){
+                if(val.value == '<?php echo ID_KATEGORI_USER_INSTANSI ?>'){
+                    $('#' + div).fadeIn();
+                }else{
+                    $('#' + div).fadeOut();
+                }
+            }
               
         </script>
+            
 

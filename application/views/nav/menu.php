@@ -1,5 +1,5 @@
 <header class="main-header">
-	<a href="<?php echo base_url(); ?>" class="logo">
+	<a  class="logo">
 		<span class="logo-mini"><b><?php echo APP_NAME_FRONT_ALIAS ?></b><?php echo APP_NAME_END_ALIAS ?></span>
 		<span class="logo-lg"><b><?php echo APP_NAME_FRONT ?></b><?php echo APP_NAME_END ?></span>
 	</a>
@@ -14,24 +14,21 @@
 				<!-- User Account: style can be found in dropdown.less -->
 				<li class="dropdown user user-menu">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<img src="<?php echo base_url() ?>assets/new/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
 						<span class="hidden-xs"><?php echo $this->session->userdata('nama_admin'); ?></span>
 					</a>
 					<ul class="dropdown-menu">
 						<!-- User image -->
 						<li class="user-header">
-							<img src="<?php echo base_url() ?>assets/new/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
 							<p>
 								<?php echo $this->session->userdata('nama_admin'); ?> - <?php echo $this->session->userdata('nama_kategori');?>
 							</p>
 						</li>
 						<li class="user-footer">
 							<div class="pull-left">
-								<a href="<?php echo base_url()?>password" class="btn btn-default btn-flat">Ubah Password</a>
+								<a href="<?php echo base_url()?>password" class="btn btn-default btn-sm"><i class="fa fa-key"></i> Ubah Password</a>
 							</div>
 							<div class="pull-right">
-								<a href="<?php echo base_url()?>dashboard/logout" class="btn btn-default btn-flat">Log out</a>
+								<a href="<?php echo base_url()?>dashboard/logout" class="btn btn-danger btn-sm"><i class="fa fa-lock"></i> Log out</a>
 							</div>
 						</li>
 					</ul>
