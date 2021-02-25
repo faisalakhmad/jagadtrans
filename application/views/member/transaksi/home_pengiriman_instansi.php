@@ -9,11 +9,11 @@
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>
-			<?php echo ucwords($current_controller); ?>
+			<?php echo ucwords($label); ?>
 		</h1>
 		<ol class="breadcrumb">
-			<li><a href="<?php echo base_url('dashboard/index'); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
-			<li class="active"><?php echo ucwords($current_controller); ?></li>
+			<li><a href=""><i class="fa fa-dashboard"></i> Home</a></li>
+			<li class="active"><?php echo ucwords($label); ?></li>
 		</ol>
 	</section>
 
@@ -112,13 +112,14 @@
 								<table class="table table-bordered table-hover table-striped" id="trans_pengiriman">
                                     <thead>
                                         <tr>
-                                            <th width="7%">Aksi</th>
+                                            <th width="5%">No.</th>
                                             <th>Instansi</th>
                                             <th>Jenis Dokumen</th>
                                             <th>Penerima</th>
                                             <th>Kec / Desa</th>
                                             <th>Tgl Kirim</th>
-                                            <th>Status</th>
+                                            <th>Status Kirim</th>
+                                            <th width="7%">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -149,7 +150,7 @@
         <div class="modal-content">
             <?php echo form_open('',' id="FormulirView" class="form-horizontal"');?> 
             <div class="modal-header">
-                <h4 class="modal-title">Detail <?php echo ucwords($current_controller); ?></h4>
+                <h4 class="modal-title">Detail <?php echo ucwords($label); ?></h4>
             </div>
             <div class="modal-body">
                 <div class="nav-tabs-custom">

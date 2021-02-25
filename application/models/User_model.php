@@ -36,6 +36,8 @@ class User_model extends CI_Model{
             $i++;
         }
 
+        $this->db->where('b.id != '.ID_KATEGORI_USER_DRIVER);
+
         if(isset($get['order'])){
             $this->db->order_by($this->column_order_user[$get['order']['0']['column']], $get['order']['0']['dir']);
         }else
@@ -53,6 +55,7 @@ class User_model extends CI_Model{
  
     function count_all_datatable_user(){
         $this->db->from('master_admin');
+        $this->db->where('kategori != '.ID_KATEGORI_USER_DRIVER);
         return $this->db->count_all_results();
     }
 
@@ -356,6 +359,16 @@ class User_model extends CI_Model{
         $post = $this->input->post(); 
         $this->db->where('id', $post['idd']);
         return $this->db->delete('master_admin');  
+    }
+
+    function get_data_kategori_with_except($except){
+        $this->db->select('*');
+        $this->db->from('kategori_user a'); 
+        $this->db->where('a.id != '.$except); // driver
+
+        $query = $this->db->get();
+        return $query->result();
+
     }
     
 }

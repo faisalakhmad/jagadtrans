@@ -37,8 +37,9 @@
 								<table class="table table-bordered table-hover table-striped" id="instansi">
                                     <thead>
                                         <tr>
-                                            <th width="10%">Aksi</th>
+                                            <th width="5%">No.</th>
                                             <th>Nama <?php echo ucwords($current_controller); ?></th>
+                                            <th width="10%">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>

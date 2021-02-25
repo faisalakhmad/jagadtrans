@@ -37,9 +37,10 @@
 								<table class="table table-bordered table-hover table-striped" id="data_desa">
                                     <thead>
                                         <tr>
-                                            <th width="10%">Aksi</th>
+                                            <th width="5%">No.</th>
                                             <th>Nama Instansi</th>
                                             <th>Kecamatan</th>
+                                            <th width="10%">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -83,7 +84,7 @@
                 <div class="form-group keterangan">
                     <label class="col-sm-3 control-label">Kecamatan <span class="required">*</span></label>
                     <div class="col-sm-9">
-                        <select class="select2 form-control" name="kecamatan" style="width: 100%;">  
+                        <select class="select2" name="kecamatan" style="width: 100%;">  
                             <?php foreach ($kecamatan as $kec): ?>
                             <option value="<?php echo $kec->kec_id;?>"><?php echo $kec->kec_nama;?></option>
                             <?php endforeach; ?>

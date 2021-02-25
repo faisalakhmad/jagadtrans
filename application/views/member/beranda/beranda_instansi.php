@@ -71,7 +71,7 @@ Selamat Datang Kembali, <?php echo $this->session->userdata('nama_admin'); ?>
 </div>
 <!-- /.row -->
 
-<div class="row" style="display: none;">
+<div class="row">
 <div class="col-md-12">
     <div class="box">
     <div class="box-header with-border">
@@ -86,7 +86,7 @@ Selamat Datang Kembali, <?php echo $this->session->userdata('nama_admin'); ?>
     <div class="box-body">
     <div class="row">
         <div class="col-md-12">
-            <div class="" id="graph_per_kecamatan"></div> 
+            <div class="" id="graph_per_instansi"></div> 
         </div>
     </div>
     <!-- /.row -->
@@ -125,12 +125,12 @@ $.ajax({
     }
 });
 
-/*$.ajax({
-    url: '<?php echo base_url()?>dashboard/graph_per_kecamatan', // getchart.php
+$.ajax({
+    url: '<?php echo base_url()?>dashboard/graph_per_instansi', // getchart.php
     dataType: 'JSON',
     type: 'GET', 
     success: function(response) {
-        Highcharts.chart('graph_per_kecamatan', {
+        Highcharts.chart('graph_per_instansi', {
         chart: {
             type: 'column'
         },
@@ -170,7 +170,7 @@ $.ajax({
         series: response.grap
         });
     }
-}); */
+}); 
 
 
 

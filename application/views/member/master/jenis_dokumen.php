@@ -37,9 +37,10 @@
 								<table class="table table-bordered table-hover table-striped" id="jenis_dokumen">
                                     <thead>
                                         <tr>
-                                            <th width="10%">Aksi</th>
+                                            <th width="5%">No.</th>
                                             <th>Nama Jenis Dokumen</th>
                                             <th>Keterangan</th>
+                                            <th width="10%">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>

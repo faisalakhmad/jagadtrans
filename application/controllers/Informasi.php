@@ -12,10 +12,12 @@ class Informasi extends Main_Controller {
         $this->load->model('informasi_model');
         $this->load->library('form_validation');
         $this->load->helper(array('string','security','form'));
+        $this->data['class_name'] = strtolower(static::class);
     }
 
     function index(){
-        $this->data['current_controller']   = 'Informasi';
+        $this->data['current_controller']   = __FUNCTION__;
+        $this->data['label']                = 'Informasi';
         level_user('informasi','index',$this->session->userdata('kategori'),'read') > 0 ? '': show_404();
         $this->load->view('member/informasi/home', $this->data);
     }
@@ -25,6 +27,8 @@ class Informasi extends Main_Controller {
         $get    = $this->input->get();
         $list   = $this->informasi_model->get_informasi_datatable();
         $data   = array(); 
+        $start  = $this->start_numbering();  
+
         foreach ($list as $r) { 
             $row = array(); 
             $tombolhapus = level_user('transaksi','index',$this->session->userdata('kategori'),'delete') > 0 ? '<a href="#" onclick="hapus(this)" data-id="'.$this->security->xss_clean($r->info_id).'" 
@@ -33,10 +37,11 @@ class Informasi extends Main_Controller {
 
             $tomboledit = level_user('transaksi','index',$this->session->userdata('kategori'),'edit') > 0 ? '<a href="#" onclick="edit(this)" data-id="'.$this->security->xss_clean($r->info_id).'" class="btn btn-sm btn-primary" title="Edit"><i class="fa fa-pencil"></i></a>':'';
 
-            $row[]  = $tomboledit.' '.$tombolhapus;
+            $row[]  = $start++;
             $row[]  = $this->security->xss_clean($r->info_judul); 
             $row[]  = $this->security->xss_clean($r->info_isi); 
             $row[]  = $this->security->xss_clean(tgl_indo_short($r->info_tanggal));
+            $row[]  = $tomboledit.' '.$tombolhapus;
 
             $data[] = $row;
         } 

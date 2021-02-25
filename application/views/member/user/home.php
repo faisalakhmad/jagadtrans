@@ -36,11 +36,12 @@
 								<table class="table table-bordered table-hover table-striped" id="table_users">
                                     <thead>
                                         <tr>
-                                            <th width="15%">Aksi</th>
+                                            <th width="5%">No.</th>
                                             <th>Nama User</th>
                                             <th>Username</th>
                                             <th>Kategori</th>
                                             <th>Status</th>
+                                            <th width="13%">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -72,7 +73,7 @@
         <div class="modal-content">
             <?php echo form_open('user/user_tambah',' id="FormulirTambah" class="form-horizontal"');?>  
             <div class="modal-header">
-                <h4 class="modal-title">Tambah <?php echo ucwords($current_controller); ?></h4>
+                <h4 class="modal-title">Tambah <?php echo ucwords($label); ?></h4>
             </div>
             <div class="modal-body">
                 <div class="form-group keterangan">
@@ -98,7 +99,7 @@
                 </div>
 
                 <div class="form-group nama">
-                    <label class="col-sm-3 control-label">Nama <?php echo ucwords($current_controller); ?> <span class="required">*</span></label>
+                    <label class="col-sm-3 control-label">Nama <?php echo ucwords($label); ?> <span class="required">*</span></label>
                     <div class="col-sm-9">
                         <input type="text" name="nama" class="form-control" maxlength="200" />
                     </div>
@@ -166,7 +167,7 @@
             <?php echo form_open('user/useredit',' id="FormulirEdit" class="form-horizontal"');?>  
             <input type="hidden" name="idd" id="idd">
             <div class="modal-header">
-                <h4 class="modal-title">Edit <?php echo ucwords($current_controller); ?></h4>
+                <h4 class="modal-title">Edit <?php echo ucwords($label); ?></h4>
             </div>
             <div class="modal-body">
                 <div class="form-group keterangan">

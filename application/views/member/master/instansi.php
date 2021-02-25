@@ -36,10 +36,11 @@
 							<div class="col-md-12">
 								<table class="table table-bordered table-hover table-striped" id="instansi">
                                     <thead>
-                                        <tr>
-                                            <th width="10%">Aksi</th>
+                                        <tr>     
+                                            <th width="5%">No.</th>                                       
                                             <th>Nama Instansi</th>
                                             <th>Keterangan</th>
+                                            <th width="10%">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>

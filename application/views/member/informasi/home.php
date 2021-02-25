@@ -7,11 +7,11 @@
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>
-			<?php echo ucwords($current_controller); ?>
+			<?php echo ucwords($label); ?>
 		</h1>
 		<ol class="breadcrumb">
-			<li><a href="<?php echo base_url('dashboard/index'); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
-			<li class="active">Data <?php echo ucwords($current_controller); ?></li>
+			<li><a href=""><i class="fa fa-dashboard"></i> Home</a></li>
+			<li class="active">Data <?php echo ucwords($label); ?></li>
 		</ol>
 	</section>
 
@@ -36,10 +36,11 @@
 								<table class="table table-bordered table-hover table-striped" id="table_informasi">
                                     <thead>
                                         <tr>
-                                            <th width="10%">Aksi</th>
+                                            <th width="5%">No.</th>
                                             <th>Judul</th>
                                             <th>Isi</th>
                                             <th>Tanggal</th>
+                                            <th width="10%">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -70,11 +71,11 @@
         <div class="modal-content">
             <?php echo form_open('informasi/informasi_tambah',' id="FormulirTambah" class="form-horizontal"');?>  
             <div class="modal-header">
-                <h4 class="modal-title">Tambah <?php echo ucwords($current_controller); ?></h4>
+                <h4 class="modal-title">Tambah <?php echo ucwords($label); ?></h4>
             </div>
             <div class="modal-body">
                 <div class="form-group judul">
-                    <label class="col-sm-3 control-label">Judul <?php echo ucwords($current_controller); ?> <span class="required">*</span></label>
+                    <label class="col-sm-3 control-label">Judul <?php echo ucwords($label); ?> <span class="required">*</span></label>
                     <div class="col-sm-9">
                         <input type="text" name="judul" class="form-control" maxlength="255" />
                     </div>
@@ -105,11 +106,11 @@
             <?php echo form_open('informasi/informasi_edit',' id="FormulirEdit" class="form-horizontal"');?>  
             <input type="hidden" name="idd" id="idd">
             <div class="modal-header">
-                <h4 class="modal-title">Edit <?php echo ucwords($current_controller); ?></h4>
+                <h4 class="modal-title">Edit <?php echo ucwords($label); ?></h4>
             </div>
             <div class="modal-body">
                 <div class="form-group judul">
-                    <label class="col-sm-3 control-label">Judul <?php echo ucwords($current_controller); ?> <span class="required">*</span></label>
+                    <label class="col-sm-3 control-label">Judul <?php echo ucwords($label); ?> <span class="required">*</span></label>
                     <div class="col-sm-9">
                         <input type="text" name="judul" id="judul_detail" class="form-control" maxlength="255" />
                     </div>

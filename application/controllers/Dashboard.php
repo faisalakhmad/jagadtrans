@@ -8,9 +8,11 @@ class Dashboard extends Main_Controller {
             redirect(base_url('login'));
         }    
         $this->load->model('dashboard_model'); 
+        $this->data['class_name'] = strtolower(static::class);
     }
 
 	public function index(){  
+        $this->data['current_controller'] = __FUNCTION__;
         level_user('dashboard','index',$this->session->userdata('kategori'),'read') > 0 ? '': show_404();
         $this->load->view('member/beranda/beranda', $this->data);  
     }
@@ -60,8 +62,21 @@ class Dashboard extends Main_Controller {
         echo json_encode($arr_return);
     }
 
+    public function graph_per_instansi(){
+        cekajax();  
+        $data = $this->dashboard_model->graph_per_instansi();
+
+        $arr_return = array();
+        for ($i=0; $i < sizeof($data); $i++) { 
+            $arr_return['grap'][$i]['name'] = $data[$i]['kecamatan'];
+            $arr_return['grap'][$i]['data'] = array((int)$data[$i]['jumlah_kirim']);
+        }
+        echo json_encode($arr_return);
+    }
+
     function instansi(){
         //dashboard untuk instansi
+        $this->data['current_controller'] = __FUNCTION__;
         level_user('dashboard',__FUNCTION__, $this->session->userdata('kategori'),'read') > 0 ? '': show_404();
         $this->load->view('member/beranda/beranda_'.__FUNCTION__, $this->data);  
     }

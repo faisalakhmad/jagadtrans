@@ -25,6 +25,12 @@ class Main_Controller extends CI_Controller {
         return $data;
     }
 
+    public function start_numbering(){
+        $get    = $this->input->get();
+        $start  = (!empty($get['start']) && is_numeric($get['start'])) ? ((int)$get['start'] + 1) : 1;
+        return $start;
+    }
+
 
 
 }

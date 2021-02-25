@@ -58,6 +58,9 @@ $html = '<style type="text/css">
 			.bottom{                
 				border-bottom:1px solid #000;            
 			} 
+			th{
+				font-weight:bold;
+			}
 			</style>';
 
 $html .= '<table width="100%" border="0" height="20%"  cellspacing="0" cellpadding="0">'        
@@ -69,7 +72,7 @@ $html .= '<table width="100%" border="0" height="20%"  cellspacing="0" cellpaddi
 
 $html .= '<table class="content-1">
 		<tr>
-			<th class="left-black top bottom">NO.</th>
+			<th class="left-black top bottom" align="center">NO.</th>
 			<th class="left-black top bottom">TANGGAL</th>
 			<th class="left-black top bottom">INSTANSI</th>
 			<th class="left-black top bottom">JENIS DOKUMEN</th>

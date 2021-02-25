@@ -24,10 +24,13 @@ class Transaksi extends Main_Controller {
         $this->arr_status_kirim[1]['label'] = 'Sudah Dikirim';
         $this->arr_status_kirim[2]['id'] = '2';
         $this->arr_status_kirim[2]['label'] = 'Gagal Dikirim';
+
+        $this->data['class_name'] = strtolower(static::class);
     }
 
     function index(){
-    	$this->data['current_controller'] 	= 'Transaksi Pengiriman';
+    	$this->data['current_controller'] 	= __FUNCTION__;
+        $this->data['label']                = 'Transaksi Pengiriman';
     	$this->data['instansi']          	= $this->transaksi_model->get_data_instansi(); 
     	$this->data['jenis_dok']          	= $this->transaksi_model->get_data_dok();
     	$this->data['desa']          		= $this->transaksi_model->get_data_desa();
@@ -61,6 +64,8 @@ class Transaksi extends Main_Controller {
         $get    = $this->input->get();
         $list   = $this->transaksi_model->get_pengiriman_datatable();
         $data   = array(); 
+        $start  = $this->start_numbering();      
+
         foreach ($list as $r) { 
             $row = array(); 
             $tombolhapus = level_user('transaksi','index',$this->session->userdata('kategori'),'delete') > 0 ? '<a href="#" onclick="hapus(this)" data-id="'.$this->security->xss_clean($r->trans_id).'" 
@@ -73,7 +78,7 @@ class Transaksi extends Main_Controller {
 
             $tombolview = level_user('transaksi','index',$this->session->userdata('kategori'),'read') > 0 ? '<a href="#" onclick="view(this)" data-id="'.$this->security->xss_clean($r->trans_id).'" class="btn btn-sm btn-default" title="Lihat Detail"><i class="fa fa-search"></i></a>':'';
 
-            $row[]  = $tombolview.' '.$tomboledit.' '.$tombolhapus;
+            $row[]  = $start++;
             $row[]  = $this->security->xss_clean($r->instansi_nama); 
             $row[]  = $this->security->xss_clean($r->jdok_nama); 
             $row[]  = $this->security->xss_clean($r->nama_admin); 
@@ -83,20 +88,21 @@ class Transaksi extends Main_Controller {
 
             switch ($r->trans_status) {
                 case '0':
-                    $status = "<span class='btn-xs btn-warning'><i class='fa fa-check'></i> Belum Dikirim</span>";
+                    $status = "<span class='btn-xs btn-warning'><i class='fa fa-check'></i> Belum</span>";
                     break;
                 case '1':
-                    $status = "<span class='btn-xs btn-success'><i class='fa fa-check'></i> Sudah Dikirim</span>";
+                    $status = "<span class='btn-xs btn-success'><i class='fa fa-check'></i> Sudah</span>";
                     break;
                 case '2':
-                    $status = "<span class='btn-xs btn-danger'><i class='fa fa-times'></i> Gagal Dikirim</span>";
+                    $status = "<span class='btn-xs btn-danger'><i class='fa fa-times'></i> Gagal</span>";
                     break;
                 
                 default:
                     $status = '-';
                     break;
             }
-            $row[]  = $this->security->xss_clean($status); 
+            $row[]  = $this->security->xss_clean($status);             
+            $row[]  = $tombolview.' '.$tomboledit.' '.$tombolhapus;
             $data[] = $row;
         } 
         $result = array(
@@ -344,7 +350,8 @@ class Transaksi extends Main_Controller {
 
     // INSTANSI
     function pengiriman_instansi(){
-        $this->data['current_controller']   = 'Pengiriman';
+        $this->data['current_controller']   = __FUNCTION__;
+        $this->data['label']                = 'Pengiriman';
         $this->data['jenis_dok']            = $this->transaksi_model->get_data_dok();
         $this->data['desa']                 = $this->transaksi_model->get_data_desa();
         $this->data['status_kirim']         = $this->arr_status_kirim;
@@ -376,11 +383,13 @@ class Transaksi extends Main_Controller {
         $get    = $this->input->get();
         $list   = $this->transaksi_model->get_pengiriman_datatable();
         $data   = array(); 
+        $start  = $this->start_numbering();  
+
         foreach ($list as $r) { 
             $row = array(); 
             $tombolview = level_user('transaksi','pengiriman_instansi',$this->session->userdata('kategori'),'read') > 0 ? '<a href="#" onclick="view(this)" data-id="'.$this->security->xss_clean($r->trans_id).'" class="btn btn-sm btn-warning" title="Lihat Detail"><i class="fa fa-search"></i></a>':'';
 
-            $row[]  = $tombolview;
+            $row[]  = $start++;
             $row[]  = $this->security->xss_clean($r->instansi_nama); 
             $row[]  = $this->security->xss_clean($r->jdok_nama); 
             $row[]  = $this->security->xss_clean($r->trans_penerima); 
@@ -389,13 +398,13 @@ class Transaksi extends Main_Controller {
 
             switch ($r->trans_status) {
                 case '0':
-                    $status = "<span class='btn-xs btn-warning'><i class='fa fa-check'></i> Belum Dikirim</span>";
+                    $status = "<span class='btn-xs btn-warning'><i class='fa fa-check'></i> Belum</span>";
                     break;
                 case '1':
-                    $status = "<span class='btn-xs btn-success'><i class='fa fa-check'></i> Sudah Dikirim</span>";
+                    $status = "<span class='btn-xs btn-success'><i class='fa fa-check'></i> Sudah</span>";
                     break;
                 case '2':
-                    $status = "<span class='btn-xs btn-danger'><i class='fa fa-times'></i> Gagal Dikirim</span>";
+                    $status = "<span class='btn-xs btn-danger'><i class='fa fa-times'></i> Gagal</span>";
                     break;
                 
                 default:
@@ -403,6 +412,7 @@ class Transaksi extends Main_Controller {
                     break;
             }
             $row[]  = $this->security->xss_clean($status); 
+            $row[]  = $tombolview;
             $data[] = $row;
         } 
         $result = array(
@@ -416,7 +426,8 @@ class Transaksi extends Main_Controller {
 
     // INSTANSI
     function pengiriman_driver(){
-        $this->data['current_controller']   = 'Pengiriman';
+        $this->data['current_controller']   = __FUNCTION__;
+        $this->data['label']                = 'Pengiriman';
         $this->data['instansi']             = $this->transaksi_model->get_data_instansi(); 
         $this->data['jenis_dok']            = $this->transaksi_model->get_data_dok();
         $this->data['desa']                 = $this->transaksi_model->get_data_desa();
@@ -449,11 +460,12 @@ class Transaksi extends Main_Controller {
         $get    = $this->input->get();
         $list   = $this->transaksi_model->get_pengiriman_datatable();
         $data   = array(); 
+        $start  = $this->start_numbering(); 
+        
         foreach ($list as $r) { 
             $row = array(); 
             $tombolview = level_user('transaksi','pengiriman_driver',$this->session->userdata('kategori'),'read') > 0 ? '<a href="#" onclick="view(this)" data-id="'.$this->security->xss_clean($r->trans_id).'" class="btn btn-sm btn-warning" title="Lihat Detail"><i class="fa fa-search"></i></a>':'';
-
-            $row[]  = $tombolview;
+            $row[]  = $start++;
             $row[]  = $this->security->xss_clean($r->instansi_nama); 
             $row[]  = $this->security->xss_clean($r->jdok_nama); 
             $row[]  = $this->security->xss_clean($r->trans_penerima); 
@@ -462,13 +474,13 @@ class Transaksi extends Main_Controller {
 
             switch ($r->trans_status) {
                 case '0':
-                    $status = "<span class='btn-xs btn-warning'><i class='fa fa-check'></i> Belum Dikirim</span>";
+                    $status = "<span class='btn-xs btn-warning'><i class='fa fa-check'></i> Belum</span>";
                     break;
                 case '1':
-                    $status = "<span class='btn-xs btn-success'><i class='fa fa-check'></i> Sudah Dikirim</span>";
+                    $status = "<span class='btn-xs btn-success'><i class='fa fa-check'></i> Sudah</span>";
                     break;
                 case '2':
-                    $status = "<span class='btn-xs btn-danger'><i class='fa fa-times'></i> Gagal Dikirim</span>";
+                    $status = "<span class='btn-xs btn-danger'><i class='fa fa-times'></i> Gagal</span>";
                     break;
                 
                 default:
@@ -476,6 +488,7 @@ class Transaksi extends Main_Controller {
                     break;
             }
             $row[]  = $this->security->xss_clean($status); 
+            $row[]  = $tombolview;
             $data[] = $row;
         } 
         $result = array(

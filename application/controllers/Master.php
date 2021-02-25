@@ -10,7 +10,7 @@ class Master extends Main_Controller {
         $this->load->model('master_model');
         $this->load->library('form_validation');
         $this->load->helper(array('string','security','form'));
-    } 
+    }     
     
 	public function index()
 	{    
@@ -27,14 +27,17 @@ class Master extends Main_Controller {
         cekajax(); 
         $get    = $this->input->get();
         $list   = $this->master_model->get_instansi_datatable();
-        $data   = array(); 
+        $data   = array();
+        $start  = $this->start_numbering();         
+
         foreach ($list as $r) { 
             $row = array(); 
             $tombolhapus = level_user('master','instansi',$this->session->userdata('kategori'),'delete') > 0 ? '<a href="#" onclick="hapus(this)" data-id="'.$this->security->xss_clean($r->instansi_id).'" data-nama="'.$this->security->xss_clean($r->instansi_nama).'" class="btn btn-sm btn-danger" title="Hapus"><i class="fa fa-trash"></i></a>':'';
             $tomboledit = level_user('master','instansi',$this->session->userdata('kategori'),'edit') > 0 ? '<a href="#" onclick="edit(this)" data-id="'.$this->security->xss_clean($r->instansi_id).'" class="btn btn-sm btn-primary" title="Edit"><i class="fa fa-pencil"></i></a>':'';
-            $row[]  = $tomboledit.' '.$tombolhapus;
+            $row[]  = $start++;
             $row[]  = $this->security->xss_clean($r->instansi_nama); 
             $row[]  = $this->security->xss_clean($r->instansi_keterangan); 
+            $row[]  = $tomboledit.' '.$tombolhapus;
             $data[] = $row;
         } 
         $result = array(
@@ -132,13 +135,17 @@ class Master extends Main_Controller {
         $get    = $this->input->get();
         $list   = $this->master_model->get_jenis_dok_datatable();
         $data   = array(); 
+        $start  = $this->start_numbering(); 
+
         foreach ($list as $r) { 
             $row = array(); 
             $tombolhapus = level_user('master','jenis_dokumen',$this->session->userdata('kategori'),'delete') > 0 ? '<a href="#" onclick="hapus(this)" data-id="'.$this->security->xss_clean($r->jdok_id).'" data-nama="'.$this->security->xss_clean($r->jdok_nama).'" class="btn btn-sm btn-danger" title="Hapus"><i class="fa fa-trash"></i></a>':'';
             $tomboledit = level_user('master','jenis_dokumen',$this->session->userdata('kategori'),'edit') > 0 ? '<a href="#" onclick="edit(this)" data-id="'.$this->security->xss_clean($r->jdok_id).'" class="btn btn-sm btn-primary" title="Edit"><i class="fa fa-pencil"></i></a>':'';
-            $row[]  = $tomboledit.' '.$tombolhapus;
+            
+            $row[]  = $start++;
             $row[]  = $this->security->xss_clean($r->jdok_nama); 
             $row[]  = $this->security->xss_clean($r->jdok_keterangan); 
+            $row[]  = $tomboledit.' '.$tombolhapus;
             $data[] = $row;
         } 
         $result = array(
@@ -236,12 +243,16 @@ class Master extends Main_Controller {
         $get    = $this->input->get();
         $list   = $this->master_model->get_data_kec();
         $data   = array(); 
+        $start  = $this->start_numbering(); 
+        
         foreach ($list as $r) { 
             $row = array(); 
             $tombolhapus = level_user('master','jenis_dokumen',$this->session->userdata('kategori'),'delete') > 0 ? '<a href="#" onclick="hapus(this)" data-id="'.$this->security->xss_clean($r->kec_id).'" data-nama="'.$this->security->xss_clean($r->kec_nama).'" class="btn btn-sm btn-danger" title="Hapus"><i class="fa fa-trash"></i></a>':'';
             $tomboledit = level_user('master','jenis_dokumen',$this->session->userdata('kategori'),'edit') > 0 ? '<a href="#" onclick="edit(this)" data-id="'.$this->security->xss_clean($r->kec_id).'" class="btn btn-sm btn-primary" title="Edit"><i class="fa fa-pencil"></i></a>':'';
-            $row[]  = $tomboledit.' '.$tombolhapus;
-            $row[]  = $this->security->xss_clean($r->kec_nama); 
+
+            $row[]  = $start++;
+            $row[]  = $this->security->xss_clean($r->kec_nama);            
+            $row[]  = $tomboledit.' '.$tombolhapus; 
             $data[] = $row;
         } 
         $result = array(
@@ -338,13 +349,17 @@ class Master extends Main_Controller {
         $get    = $this->input->get();
         $list   = $this->master_model->get_data_desa();
         $data   = array(); 
+        $start  = $this->start_numbering(); 
+        
         foreach ($list as $r) { 
             $row = array(); 
             $tombolhapus = level_user('master','desa',$this->session->userdata('kategori'),'delete') > 0 ? '<a href="#" onclick="hapus(this)" data-id="'.$this->security->xss_clean($r->desa_id).'" data-nama="'.$this->security->xss_clean($r->desa_nama).'" class="btn btn-sm btn-danger" title="Hapus"><i class="fa fa-trash"></i></a>':'';
             $tomboledit = level_user('master','desa',$this->session->userdata('kategori'),'edit') > 0 ? '<a href="#" onclick="edit(this)" data-id="'.$this->security->xss_clean($r->desa_id).'" class="btn btn-sm btn-primary" title="Edit"><i class="fa fa-pencil"></i></a>':'';
-            $row[]  = $tomboledit.' '.$tombolhapus;
+
+            $row[]  = $start++;
             $row[]  = $this->security->xss_clean($r->desa_nama); 
             $row[]  = $this->security->xss_clean($r->kec_nama); 
+            $row[]  = $tomboledit.' '.$tombolhapus;
             $data[] = $row;
         } 
         $result = array(

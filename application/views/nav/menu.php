@@ -51,6 +51,7 @@
 		<!-- sidebar menu: : style can be found in sidebar.less -->
 		<ul class="sidebar-menu" data-widget="tree">
 			<?php
+			#echo "<pre>";print_r($menu);die;
 			if(!empty($menu)){
 	            foreach($menu as $rows){
 	                if(!empty($rows['SUB_ID'])){
@@ -85,8 +86,10 @@
 	                        </ul>
 	                    </li>
 	                    <?php
-	                }else {?>
-	                    <li class="active">
+	                }else {
+	                	$active = ($rows['FUNC'] == $current_controller && $rows['MENU_CONTROLLER'] == $class_name) ? 'active' : '';
+	                	?>
+	                    <li class="<?php echo $active; ?>">
 	                        <a href="<?php echo base_url().$rows['MENU_CONTROLLER'].'/'.$rows['FUNC'];; ?>"><i class="fa fa-th"></i> <span><?php echo $rows['MENU_NAMA']; ?></span></a>
 	                    </li><?php
 	                }      

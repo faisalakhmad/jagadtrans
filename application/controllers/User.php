@@ -10,11 +10,13 @@ class User extends Main_Controller {
         $this->load->model('user_model');
         $this->load->library('form_validation');
         $this->load->helper(array('string','security','form','email'));
+        $this->data['class_name'] = strtolower(static::class);
     }
 
     function index(){
-        $this->data['current_controller'] = 'user';
-        $this->data['kategori']           = $this->db->get('kategori_user')->result(); 
+        $this->data['current_controller'] = __FUNCTION__;
+        $this->data['label']              = 'user';
+        $this->data['kategori']           = $this->user_model->get_data_kategori_with_except(ID_KATEGORI_USER_DRIVER);
         $this->data['instansi']           = $this->db->get('master_instansi')->result(); 
 
         level_user('user','index',$this->session->userdata('kategori'),'read') > 0 ? '': show_404();
@@ -26,6 +28,8 @@ class User extends Main_Controller {
         $get    = $this->input->get();
         $list   = $this->user_model->get_users_datatable();
         $data   = array(); 
+        $start  = $this->start_numbering();  
+
         foreach ($list as $r) { 
             $row = array(); 
             $tombolhapus = level_user('user','index',$this->session->userdata('kategori'),'delete') > 0 ? '<a href="#" onclick="hapus(this)" data-id="'.$this->security->xss_clean($r->id).'" 
@@ -37,11 +41,12 @@ class User extends Main_Controller {
 
             $status = $r->aktif == '1' ? "<span class='btn   btn-xs  btn-success'>Aktif</span>":"<span class='btn  btn-xs btn-danger'>Blokir</span>";
 
-            $row[]  = $tombolview.' '.$tomboledit.' '.$tombolhapus;
+            $row[]  = $start++;
             $row[]  = $this->security->xss_clean($r->nama_admin); 
             $row[]  = $this->security->xss_clean($r->username); 
             $row[]  = $this->security->xss_clean($r->kategori_user); 
             $row[]  = $this->security->xss_clean($status); 
+            $row[]  = $tombolview.' '.$tomboledit.' '.$tombolhapus;
 
             $data[] = $row;
         } 
@@ -155,7 +160,8 @@ class User extends Main_Controller {
     }
 
     function list_driver(){
-        $this->data['current_controller'] = 'Driver';
+        $this->data['current_controller']   = __FUNCTION__;
+        $this->data['label']                = 'Driver';
 
         level_user('user',__FUNCTION__, $this->session->userdata('kategori'),'read') > 0 ? '': show_404();
         $this->load->view('member/user/'.__FUNCTION__, $this->data);
@@ -163,25 +169,29 @@ class User extends Main_Controller {
 
     function data_driver(){
         cekajax(); 
-        cekajax(); 
         $get    = $this->input->get();
         $list   = $this->user_model->get_driver_datatable();
         $data   = array(); 
+        $start  = $this->start_numbering();  
+
         foreach ($list as $r) { 
             $row = array(); 
+
             $tombolhapus = level_user('user','index',$this->session->userdata('kategori'),'delete') > 0 ? '<a href="#" onclick="hapus(this)" data-id="'.$this->security->xss_clean($r->id).'" 
                 data-title="'.$this->security->xss_clean($r->nama_admin).'"
                 class="btn btn-sm btn-danger" title="Hapus"><i class="fa fa-trash"></i></a>':'';
 
             $tomboledit = level_user('user','index',$this->session->userdata('kategori'),'edit') > 0 ? '<a href="#" onclick="edit(this)" data-id="'.$this->security->xss_clean($r->id).'" class="btn btn-sm btn-primary" title="Edit"><i class="fa fa-pencil"></i></a>':'';
-            $tombolview = level_user('user','index',$this->session->userdata('kategori'),'read') > 0 ? '<a href="#" onclick="detail(this)" data-id="'.$this->security->xss_clean($r->id).'" class="btn btn-sm btn-default" title="View"><i class="fa fa-search"></i></a>':'';
 
             $status = $r->aktif == '1' ? "<span class='btn   btn-xs  btn-success'>Aktif</span>":"<span class='btn  btn-xs btn-danger'>Blokir</span>";
 
+            $row[]  = $start++;
             $row[]  = $this->security->xss_clean($r->nama_admin); 
             $row[]  = $this->security->xss_clean($r->alamat); 
             $row[]  = $this->security->xss_clean($r->handphone); 
-            $row[]  = $this->security->xss_clean($r->email); 
+            $row[]  = $this->security->xss_clean($r->email);
+            $row[]  = $status;
+            $row[]  = $tomboledit.' '.$tombolhapus;
 
             $data[] = $row;
         } 
